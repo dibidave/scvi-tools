@@ -470,14 +470,12 @@ class SemiSupervisedTask(VAETask):
         loss = scvi_losses.loss
 
         if labelled_dataset is not None:
-            import pdb
-
-            pdb.set_trace()
-            x = labelled_dataset[_CONSTANTS.X_KEY]
-            y = labelled_dataset[_CONSTANTS.LABELS_KEY]
-            batch_idx = labelled_dataset[_CONSTANTS.BATCH_KEY]
+            x = labelled_dataset[_CONSTANTS.X_KEY].cuda()
+            y = labelled_dataset[_CONSTANTS.LABELS_KEY].cuda()
+            batch_idx = labelled_dataset[_CONSTANTS.BATCH_KEY].cuda()
             classification_loss = F.cross_entropy(
-                self.model.classify(x, batch_idx), y.view(-1).type(torch.LongTensor)
+                self.model.classify(x, batch_idx),
+                y.view(-1).type(torch.LongTensor).cuda(),
             )
             loss += classification_loss * self.classification_ratio
 
