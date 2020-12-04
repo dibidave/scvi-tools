@@ -9,7 +9,7 @@ from torch.optim.lr_scheduler import ReduceLROnPlateau
 
 from scvi import _CONSTANTS
 from scvi._compat import Literal
-from scvi.compose import AbstractVAE, one_hot, auto_move_data
+from scvi.compose import AbstractVAE, one_hot
 from scvi.modules import Classifier
 
 
@@ -452,7 +452,6 @@ class SemiSupervisedTask(VAETask):
         self.classification_ratio = classification_ratio
         self.scheme = scheme
 
-    @auto_move_data
     def training_step(self, batch, batch_idx, optimizer_idx=0):
         # Potentially dangerous if batch is from a single dataloader with two keys
         if len(batch) == 2:
@@ -471,6 +470,9 @@ class SemiSupervisedTask(VAETask):
         loss = scvi_losses.loss
 
         if labelled_dataset is not None:
+            import pdb
+
+            pdb.set_trace()
             x = labelled_dataset[_CONSTANTS.X_KEY]
             y = labelled_dataset[_CONSTANTS.LABELS_KEY]
             batch_idx = labelled_dataset[_CONSTANTS.BATCH_KEY]
