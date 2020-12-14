@@ -310,10 +310,12 @@ class SCANVI(RNASeqMixin, VAEMixin, ArchesMixin, BaseModelClass):
             num_workers=num_workers,
         )
         self.train_indices_ = train_dl.indices
-        self._unsupervised_task = VAETask(
-            self._base_model, len(self.train_indices), **unsupervised_task_kwargs
-        )
-        self.trainer.fit(self._unsupervised_task, train_dl)
+
+        if train_base_model:
+            self._unsupervised_task = VAETask(
+                self._base_model, len(self.train_indices), **unsupervised_task_kwargs
+            )
+            self.trainer.fit(self._unsupervised_task, train_dl)
         self._base_model.eval()
 
         self.model.load_state_dict(self._base_model.state_dict(), strict=False)
