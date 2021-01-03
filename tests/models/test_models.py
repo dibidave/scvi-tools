@@ -5,7 +5,7 @@ import pytest
 
 import scvi
 from scvi.data import synthetic_iid, transfer_anndata_setup, setup_anndata
-from scvi.model import SCVI, SCANVI, GIMVI, TOTALVI, LinearSCVI, AUTOZI
+from scvi.model import SCVI, SCANVI, GIMVI, TOTALVI, LinearSCVI, AUTOZI, PEAKVI
 from scipy.sparse import csr_matrix
 
 
@@ -655,3 +655,15 @@ def test_totalvi_online_update(save_path):
     model3.model.protein_batch_mask[3]
     model3.train(max_epochs=1)
     model3.get_latent_representation()
+
+
+def test_peakvi():
+    data = synthetic_iid(n_batches=1)
+    vae = PEAKVI(
+        data,
+    )
+    vae.train(1)
+    vae.get_elbo(indices=vae.validation_indices)
+    vae.get_reconstruction_error(indices=vae.validation_indices)
+    vae.get_imputed_values()
+    vae.get_latent_representation()
