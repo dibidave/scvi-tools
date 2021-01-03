@@ -658,7 +658,7 @@ def test_totalvi_online_update(save_path):
 
 
 def test_peakvi():
-    data = synthetic_iid(n_batches=1)
+    data = synthetic_iid()
     vae = PEAKVI(
         data,
     )
@@ -667,3 +667,4 @@ def test_peakvi():
     vae.get_reconstruction_error(indices=vae.validation_indices)
     vae.get_imputed_values()
     vae.get_latent_representation()
+    vae.differential_accessibility(groupby="labels", group1="label_1")
